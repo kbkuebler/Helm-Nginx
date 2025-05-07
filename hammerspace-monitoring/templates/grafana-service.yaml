@@ -1,0 +1,18 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hammerspace-monitoring.fullname" . }}-grafana
+  labels:
+    app: {{ include "hammerspace-monitoring.name" . }}
+    component: grafana
+spec:
+  type: {{ get (get .Values.grafana "service" | default (dict "type" "NodePort")) "type" }}
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: {{ include "hammerspace-monitoring.name" . }}
+    component: grafana
+

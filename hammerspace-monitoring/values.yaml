@@ -1,0 +1,40 @@
+prometheus:
+  clusterLabel: KBK-HOME
+  anvilInstance: anvil-site-a.onaside.quest
+  scrapeTargets:
+    cluster:
+      - 10.200.120.200:9101/metrics
+      - 10.200.120.200:9102/metrics
+      - 10.200.120.200:9103/metrics
+    anvil:
+      - 10.200.120.201:9200/metrics
+  persistence:
+    enabled: true
+    storage:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: "nfs-client"
+      size: 5Gi
+
+grafana:
+  adminUser: admin
+  adminPassword: admin!
+  service:
+    type: NodePort
+    port: 3000
+  persistence:
+    enabled: true
+    storage:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: "nfs-client"
+      size: 5Gi
+  dashboards:
+    hammerspaceFilesystemStats:
+      name: hammerspace-filesystem-stats
+      filename: hammerspace_filesystem_stats.json
+      path: dashboards/hammerspace_filesystem_stats.json
+
+dashboards:
+  enabled: true
+

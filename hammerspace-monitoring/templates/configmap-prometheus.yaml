@@ -1,0 +1,44 @@
+---
+# templates/configmap-prometheus.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hammerspace-monitoring.fullname" . }}-prometheus-config
+  labels:
+    app: prometheus
+data:
+  prometheus.yaml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        monitor: example
+      metric_name_validation_scheme: legacy
+
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets: ['localhost:9090']
+            labels:
+              node_type: prometheus
+
+      - job_name: cluster
+        static_configs:
+          - targets:
+              {{- range .Values.prometheus.scrapeTargets.cluster }}
+              - '{{ . }}'
+              {{- end }}
+            labels:
+              cluster: {{ .Values.prometheus.clusterLabel }}
+              node_type: clusterip
+
+      - job_name: anvil_nodes
+        static_configs:
+          - targets:
+              {{- range .Values.prometheus.scrapeTargets.anvil }}
+              - '{{ . }}'
+              {{- end }}
+            labels:
+              cluster: {{ .Values.prometheus.clusterLabel }}
+              node_type: anvil
+              instance: {{ .Values.prometheus.anvilInstance }}

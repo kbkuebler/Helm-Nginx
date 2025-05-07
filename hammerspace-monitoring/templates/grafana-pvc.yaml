@@ -1,0 +1,15 @@
+{{- if .Values.grafana.pvc.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "hammerspace-monitoring.fullname" . }}-grafana
+  labels:
+    app: {{ include "hammerspace-monitoring.name" . }}
+spec:
+  accessModes: {{ toYaml .Values.grafana.pvc.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.grafana.pvc.resources.requests.storage }}
+  storageClassName: {{ .Values.grafana.pvc.storageClassName | quote }}
+{{- end }}
+

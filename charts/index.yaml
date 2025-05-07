@@ -1,0 +1,12 @@
+apiVersion: v1
+entries:
+  hammerspace-monitoring:
+  - apiVersion: v2
+    created: "2025-05-06T15:24:49.679837003-04:00"
+    description: Monitoring stack with Prometheus and Grafana for Hammerspace
+    digest: 6c948b5914250eaf8863ce868cb04166bc411a1abcb4f72eb8b7c4accfa25dd6
+    name: hammerspace-monitoring
+    urls:
+    - http://10.200.120.205/charts/hammerspace-monitoring-0.1.0.tgz
+    version: 0.1.0
+generated: "2025-05-06T15:24:49.679103963-04:00"

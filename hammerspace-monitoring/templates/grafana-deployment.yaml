@@ -1,0 +1,33 @@
+---
+# templates/grafana-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: {{ .Values.grafana.adminUser }}
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: {{ .Values.grafana.adminPassword }}
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: grafana-storage
+              mountPath: /var/lib/grafana
+      volumes:
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: grafana-pvc
