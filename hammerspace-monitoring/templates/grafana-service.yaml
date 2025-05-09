@@ -15,4 +15,3 @@ spec:
   selector:
     app: {{ include "hammerspace-monitoring.name" . }}
     component: grafana
-

@@ -9,13 +9,8 @@ prometheus:
     storage:
       accessModes:
         - ReadWriteOnce
-<<<<<<< HEAD
       storageClassName: "hs-storage"
       size: 5Gi
-=======
-      size: 8Gi
-      storageClassName: hs-storage
->>>>>>> 904f132 (added templete update and role binding)
 
 grafana:
   adminUser: admin
@@ -25,7 +20,6 @@ grafana:
     storage:
       accessModes:
         - ReadWriteOnce
-<<<<<<< HEAD
       storageClassName: "hs-storage"
       size: 5Gi
   dashboards:
@@ -37,7 +31,3 @@ grafana:
 dashboards:
   enabled: true
 
-=======
-      size: 4Gi
-      storageClassName: hs-storage
->>>>>>> 904f132 (added templete update and role binding)
