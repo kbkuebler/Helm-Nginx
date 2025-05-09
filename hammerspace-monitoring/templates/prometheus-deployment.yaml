@@ -8,12 +8,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prometheus
+      app: {{ include "hammerspace-monitoring.name" . }}
+      component: prometheus
   template:
     serviceAccountName: prometheus
     metadata:
       labels:
-        app: prometheus
+        app: {{ include "hammerspace-monitoring.name" . }}
+        component: prometheus
     spec:
       containers:
         - name: prometheus

@@ -8,11 +8,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: grafana
+      app: {{ include "hammerspace-monitoring.name" . }}
+      component: grafana
   template:
     metadata:
       labels:
-        app: grafana
+        app: {{ include "hammerspace-monitoring.name" . }}
+        component: grafana
     spec:
       containers:
         - name: grafana
