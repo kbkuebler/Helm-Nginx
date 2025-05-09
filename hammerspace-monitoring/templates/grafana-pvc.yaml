@@ -1,15 +1,11 @@
-{{- if .Values.grafana.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "hammerspace-monitoring.fullname" . }}-grafana
-  labels:
-    app: {{ include "hammerspace-monitoring.name" . }}
 spec:
-  accessModes: {{ toYaml .Values.grafana.pvc.accessModes | nindent 4 }}
+  accessModes:
+    - {{ .Values.grafana.persistence.accessModes | default "ReadWriteOnce" }}
   resources:
     requests:
-      storage: {{ .Values.grafana.pvc.resources.requests.storage }}
-  storageClassName: {{ .Values.grafana.pvc.storageClassName | quote }}
-{{- end }}
-
+      storage: {{ .Values.grafana.persistence.size | default "5Gi" }}
+  storageClassName: {{ .Values.grafana.persistence.storageClass | quote }}
