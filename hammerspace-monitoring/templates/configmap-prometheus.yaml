@@ -5,7 +5,8 @@ kind: ConfigMap
 metadata:
   name: {{ include "hammerspace-monitoring.fullname" . }}-prometheus-config
   labels:
-    app: prometheus
+    app: {{ include "hammerspace-monitoring.name" . }}
+    component: prometheus
 data:
   prometheus.yaml: |
     global:

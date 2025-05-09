@@ -1,32 +1,31 @@
+# values.yaml
+# Optional override for naming
+nameOverride: ""
+fullnameOverride: ""
+
 prometheus:
-  clusterLabel: KBK-HOME
-  anvilInstance: anvil-site-a.onaside.quest
-  scrapeTargets:
-    cluster:
-      - 10.200.120.200:9101/metrics
-      - 10.200.120.200:9102/metrics
-      - 10.200.120.200:9103/metrics
-    anvil:
-      - 10.200.120.201:9200/metrics
   persistence:
     enabled: true
     storage:
       accessModes:
         - ReadWriteOnce
+<<<<<<< HEAD
       storageClassName: "hs-storage"
       size: 5Gi
+=======
+      size: 8Gi
+      storageClassName: hs-storage
+>>>>>>> 904f132 (added templete update and role binding)
 
 grafana:
   adminUser: admin
-  adminPassword: admin!
-  service:
-    type: NodePort
-    port: 3000
+  adminPassword: admin
   persistence:
     enabled: true
     storage:
       accessModes:
         - ReadWriteOnce
+<<<<<<< HEAD
       storageClassName: "hs-storage"
       size: 5Gi
   dashboards:
@@ -38,3 +37,7 @@ grafana:
 dashboards:
   enabled: true
 
+=======
+      size: 4Gi
+      storageClassName: hs-storage
+>>>>>>> 904f132 (added templete update and role binding)

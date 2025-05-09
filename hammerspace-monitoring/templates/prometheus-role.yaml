@@ -4,6 +4,7 @@ kind: Role
 metadata:
   name: prometheus
   labels:
-    app: prometheus
+    app: {{ include "hammerspace-monitoring.name" . }}
+    component: prometheus
 rules: []  # No permissions needed; avoids cluster access
 {{- end }}

@@ -4,7 +4,8 @@ kind: RoleBinding
 metadata:
   name: prometheus
   labels:
-    app: prometheus
+    app: {{ include "hammerspace-monitoring.name" . }}
+    component: prometheus
 subjects:
   - kind: ServiceAccount
     name: prometheus

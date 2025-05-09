@@ -1,12 +1,17 @@
-{{- if .Values.prometheus.persistence.enabled }}
+{{- define "hammerspace-monitoring.pvc" -}}
+{{- $root := index . 0 }}
+{{- $component := index . 1 }}
+{{- $config := index . 2 }}
+{{- if $config.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "hammerspace-monitoring.fullname" . }}-prometheus
+  name: {{ include "hammerspace-monitoring.componentName" (list $root $component) }}
   labels:
-    app: {{ include "hammerspace-monitoring.name" . }}
-    component: prometheus
+    {{- include "hammerspace-monitoring.labels" $root | nindent 4 }}
+    app.kubernetes.io/component: {{ $component }}
 spec:
+<<<<<<< HEAD
   accessModes:
     {{- toYaml .Values.grafana.persistence.storage.accessModes | nindent 4 }}
   resources:
@@ -14,3 +19,20 @@ spec:
       storage: {{ .Values.grafana.persistence.storage.size | default "5Gi" }}
   storageClassName: {{ .Values.prometheus.persistence.storage.storageClassName | quote }}
 {{- end }}
+=======
+  accessModes: {{ toYaml $config.persistence.storage.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ $config.persistence.storage.size }}
+  storageClassName: {{ $config.persistence.storage.storageClassName | quote }}
+{{- end }}
+{{- end -}}
+
+---
+# templates/prometheus-pvc.yaml
+{{ include "hammerspace-monitoring.pvc" (list . "prometheus" .Values.prometheus) }}
+
+---
+# templates/grafana-pvc.yaml
+{{ include "hammerspace-monitoring.pvc" (list . "grafana" .Values.grafana) }}
+>>>>>>> 904f132 (added templete update and role binding)
