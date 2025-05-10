@@ -1,9 +1,9 @@
-{{- if .Values.grafana.dashboards.enabled }}
+{{- if .Values.dashboards.enabled }}
 {{- range .Values.grafana.dashboards.list }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .name | trunc 63 | quote }}
+  name: {{ printf "%s-dashboard-%s" (include "hammerspace-monitoring.fullname" $) .name | trunc 63 }}
   labels:
     grafana_dashboard: "1"
 data:
