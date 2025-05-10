@@ -12,6 +12,23 @@ prometheus:
       storageClassName: "hs-storage"
       size: 5Gi
 
+  clusterLabel: "boston"
+  anvilInstance: "kbk-hs-boston-anvil.onaside.quest.local"
+  dsxInstance: "kbk-hs-boston-dsx1.onaside.quest.local"
+
+  scrapeTargets:
+    cluster:
+      - 10.200.120.200:9101
+      - 10.200.120.200:9102
+      - 10.200.120.200:9103
+
+    anvil:
+      - 10.200.120.200:9100
+
+    dsx:
+      - 10.200.120.201:9100
+      - 10.200.120.201:9105
+
 grafana:
   adminUser: admin
   adminPassword: admin
@@ -30,4 +47,5 @@ grafana:
 
 dashboards:
   enabled: true
+
 

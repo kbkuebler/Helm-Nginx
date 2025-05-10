@@ -31,6 +31,7 @@ data:
             labels:
               cluster: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
               node_type: clusterip
+              instance: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
       {{- end }}
 
       {{- if .Values.prometheus.scrapeTargets.anvil }}
@@ -44,4 +45,17 @@ data:
               cluster: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
               node_type: anvil
               instance: {{ .Values.prometheus.anvilInstance | default "default-anvil-instance" }}
+      {{- end }}
+
+      {{- if .Values.prometheus.scrapeTargets.dsx }}
+      - job_name: dsx_nodes
+        static_configs:
+          - targets:
+              {{- range .Values.prometheus.scrapeTargets.dsx }}
+              - '{{ . }}'
+              {{- end }}
+            labels:
+              cluster: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
+              node_type: dsx
+              instance: {{ .Values.prometheus.dsxInstance | default "default-dsx-instance" }}
       {{- end }}
