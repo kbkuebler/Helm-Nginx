@@ -8,6 +8,7 @@ metadata:
   labels:
     app: {{ include "hammerspace-monitoring.name" . }}
     component: grafana
+    grafana_dashboard: "1"
 data:
   {{- range $key, $dashboard := .Values.grafana.dashboards }}
   {{ $dashboard.filename }}: |

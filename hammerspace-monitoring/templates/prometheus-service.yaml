@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "hammerspace-monitoring.fullname" . }}-prometheus
+  name: prometheus
   labels:
     app: {{ include "hammerspace-monitoring.name" . }}
     component: prometheus
