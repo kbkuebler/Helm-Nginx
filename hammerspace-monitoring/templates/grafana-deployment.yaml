@@ -30,10 +30,9 @@ spec:
             - name: grafana-storage
               mountPath: /var/lib/grafana
             - name: dashboard-provider
-              mountPath: /etc/grafana/provisioning/dashboards/dashboards.yaml
-              subPath: dashboards.yaml
-            - name: dashboards
               mountPath: /etc/grafana/provisioning/dashboards
+            - name: dashboards
+              mountPath: /etc/grafana/provisioning/dashboards/dashboards
             - name: datasource
               mountPath: /etc/grafana/provisioning/datasources
       volumes:
