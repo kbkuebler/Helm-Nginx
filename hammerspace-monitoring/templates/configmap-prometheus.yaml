@@ -1,5 +1,3 @@
----
-# templates/configmap-prometheus.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -23,6 +21,7 @@ data:
             labels:
               node_type: prometheus
 
+      {{- if .Values.prometheus.scrapeTargets.cluster }}
       - job_name: cluster
         static_configs:
           - targets:
@@ -30,9 +29,11 @@ data:
               - '{{ . }}'
               {{- end }}
             labels:
-              cluster: {{ .Values.prometheus.clusterLabel }}
+              cluster: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
               node_type: clusterip
+      {{- end }}
 
+      {{- if .Values.prometheus.scrapeTargets.anvil }}
       - job_name: anvil_nodes
         static_configs:
           - targets:
@@ -40,6 +41,7 @@ data:
               - '{{ . }}'
               {{- end }}
             labels:
-              cluster: {{ .Values.prometheus.clusterLabel }}
+              cluster: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
               node_type: anvil
-              instance: {{ .Values.prometheus.anvilInstance }}
+              instance: {{ .Values.prometheus.anvilInstance | default "default-anvil-instance" }}
+      {{- end }}
