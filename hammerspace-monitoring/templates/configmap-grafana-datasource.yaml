@@ -1,0 +1,19 @@
+---
+# templates/configmap-grafana-datasource.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hammerspace-monitoring.fullname" . }}-datasource
+  labels:
+    app: {{ include "hammerspace-monitoring.name" . }}
+    component: grafana
+data:
+  prometheus.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://{{ include "hammerspace-monitoring.fullname" . }}-prometheus:9090
+        isDefault: true
+        editable: true 

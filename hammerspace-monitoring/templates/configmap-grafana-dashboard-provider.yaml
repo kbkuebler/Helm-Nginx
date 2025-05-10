@@ -1,0 +1,21 @@
+---
+# templates/configmap-grafana-dashboard-provider.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "hammerspace-monitoring.fullname" . }}-dashboard-provider
+  labels:
+    app: {{ include "hammerspace-monitoring.name" . }}
+    component: grafana
+data:
+  dashboards.yaml: |
+    apiVersion: 1
+    providers:
+      - name: 'default'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /etc/grafana/provisioning/dashboards 

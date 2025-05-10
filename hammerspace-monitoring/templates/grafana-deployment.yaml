@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grafana
+  name: hs-grafana
 spec:
   replicas: 1
   selector:
@@ -29,7 +29,22 @@ spec:
           volumeMounts:
             - name: grafana-storage
               mountPath: /var/lib/grafana
+            - name: dashboard-provider
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: dashboards
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: datasource
+              mountPath: /etc/grafana/provisioning/datasources
       volumes:
         - name: grafana-storage
           persistentVolumeClaim:
             claimName: {{ include "hammerspace-monitoring.fullname" . }}-grafana
+        - name: dashboard-provider
+          configMap:
+            name: {{ include "hammerspace-monitoring.fullname" . }}-dashboard-provider
+        - name: dashboards
+          configMap:
+            name: {{ include "hammerspace-monitoring.fullname" . }}-dashboards
+        - name: datasource
+          configMap:
+            name: {{ include "hammerspace-monitoring.fullname" . }}-datasource
