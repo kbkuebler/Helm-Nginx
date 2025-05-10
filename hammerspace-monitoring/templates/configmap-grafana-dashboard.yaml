@@ -1,0 +1,15 @@
+{{- if .Values.grafana.dashboards.enabled }}
+{{- range .Values.grafana.dashboards.list }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name | trunc 63 | quote }}
+  labels:
+    grafana_dashboard: "1"
+data:
+  {{ .filename }}: |
+{{ (.Files.Get .path) | indent 4 }}
+
+---
+{{- end }}
+{{- end }}
