@@ -32,4 +32,4 @@ spec:
       volumes:
         - name: grafana-storage
           persistentVolumeClaim:
-            claimName: grafana-pvc
+            claimName:       claimName: {{ include "hammerspace-monitoring.fullname" . }}-grafana

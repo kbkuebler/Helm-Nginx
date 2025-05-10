@@ -36,4 +36,4 @@ spec:
             name: {{ include "hammerspace-monitoring.fullname" . }}-prometheus-config
         - name: storage
           persistentVolumeClaim:
-            claimName: prometheus-pvc
+            claimName:       claimName: {{ include "hammerspace-monitoring.fullname" . }}-prometheus
