@@ -40,22 +40,26 @@ grafana:
       size: 5Gi
 
   dashboards:
-    list:
-      - name: hammerspace-filesystem-stats
-        filename: hammerspace_filesystem_stats.json
-        path: dashboards/hammerspace_filesystem_stats.json
-      - name: hammerspace-nodes
-        filename: hammerspace_nodes.json
-        path: dashboards/hammerspace_nodes.json
-      - name: hammerspace-performance
-        filename: hammerspace_performance.json
-        path: dashboards/hammerspace_performance.json
-      - name: hammerspace-alerts
-        filename: hammerspace_alerts.json
-        path: dashboards/hammerspace_alerts.json
-      - name: hammerspace-capacity
-        filename: hammerspace_capacity.json
-        path: dashboards/hammerspace_capacity.json
+    hammerspaceFilesystemStats:
+      name: hammerspace-filesystem-stats
+      filename: hammerspace_filesystem_stats.json
+      path: files/dashboards/hammerspace_filesystem_stats.json
+    hammerspaceProtocolStats:
+      name: hammerspace-protocol-stats
+      filename: hammerspace_protocol_stats.json
+      path: files/dashboards/hammerspace_protocol_stats.json
+    hammerspaceReplication:
+      name: hammerspace-replication
+      filename: hammerspace_replication.json
+      path: files/dashboards/hammerspace_replication.json
+    hammerspaceObjectMobility:
+      name: hammerspace-object-mobility
+      filename: hammerspace_object_mobility.json
+      path: files/dashboards/hammerspace_object_mobility.json
+    hammerspaceFileMobility:
+      name: hammerspace-file-mobility
+      filename: hammerspace_file_mobility.json
+      path: files/dashboards/hammerspace_file_mobility.json
 
 dashboards:
   enabled: true

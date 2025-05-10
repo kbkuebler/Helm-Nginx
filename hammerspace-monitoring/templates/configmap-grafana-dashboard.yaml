@@ -1,15 +1,14 @@
 {{- if .Values.dashboards.enabled }}
-{{- range .Values.grafana.dashboards.list }}
+{{- range $key, $dashboard := .Values.grafana.dashboards }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-dashboard-%s" (include "hammerspace-monitoring.fullname" $) .name | trunc 63 }}
+  name: {{ $dashboard.name }}
   labels:
     grafana_dashboard: "1"
 data:
-  {{ .filename }}: |
-{{ ($.Files.Get .path) | indent 4 }}
-
----
+  {{ $dashboard.filename }}: |
+{{ $.Files.Get $dashboard.path | indent 4 }}
 {{- end }}
 {{- end }}
