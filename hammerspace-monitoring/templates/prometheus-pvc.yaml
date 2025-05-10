@@ -11,15 +11,6 @@ metadata:
     {{- include "hammerspace-monitoring.labels" $root | nindent 4 }}
     app.kubernetes.io/component: {{ $component }}
 spec:
-<<<<<<< HEAD
-  accessModes:
-    {{- toYaml .Values.grafana.persistence.storage.accessModes | nindent 4 }}
-  resources:
-    requests:
-      storage: {{ .Values.grafana.persistence.storage.size | default "5Gi" }}
-  storageClassName: {{ .Values.prometheus.persistence.storage.storageClassName | quote }}
-{{- end }}
-=======
   accessModes: {{ toYaml $config.persistence.storage.accessModes | nindent 4 }}
   resources:
     requests:
@@ -35,4 +26,3 @@ spec:
 ---
 # templates/grafana-pvc.yaml
 {{ include "hammerspace-monitoring.pvc" (list . "grafana" .Values.grafana) }}
->>>>>>> 904f132 (added templete update and role binding)
