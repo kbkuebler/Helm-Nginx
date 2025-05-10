@@ -1,11 +1,1 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ include "hammerspace-monitoring.fullname" . }}-grafana
-spec:
-  accessModes:
-    - {{ .Values.grafana.persistence.accessModes | default "ReadWriteOnce" }}
-  resources:
-    requests:
-      storage: {{ .Values.grafana.persistence.size | default "5Gi" }}
-  storageClassName: {{ .Values.grafana.persistence.storageClass | quote }}
+{{ include "hammerspace-monitoring.pvc" (list . "grafana" .Values.grafana) }}
