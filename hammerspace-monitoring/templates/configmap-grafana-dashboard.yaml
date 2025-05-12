@@ -1,19 +1,20 @@
 ---
 # templates/configmap-grafana-dashboard.yaml
 {{- if .Values.dashboards.enabled }}
+{{- range $key, $dashboard := .Values.grafana.dashboards }}
+{{- if $.Files.Get $dashboard.path }}
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "hammerspace-monitoring.fullname" . }}-dashboards
+  name: {{ include "hammerspace-monitoring.fullname" . }}-dashboard-{{ $dashboard.name }}
   labels:
     app: {{ include "hammerspace-monitoring.name" . }}
     component: grafana
     grafana_dashboard: "1"
 data:
-  {{- range $key, $dashboard := .Values.grafana.dashboards }}
-  {{- if $.Files.Get $dashboard.path }}
   {{ $dashboard.filename }}: |
 {{ $.Files.Get $dashboard.path | indent 4 }}
-  {{- end }}
-  {{- end }}
+{{- end }}
+{{- end }}
 {{- end }}

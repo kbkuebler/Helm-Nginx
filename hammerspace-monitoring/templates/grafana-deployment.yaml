@@ -32,8 +32,11 @@ spec:
             {{- if .Values.dashboards.enabled }}
             - name: dashboard-provider
               mountPath: /etc/grafana/provisioning/dashboards
-            - name: dashboards
-              mountPath: /etc/grafana/provisioning/dashboards
+            {{- range $key, $dashboard := .Values.grafana.dashboards }}
+            - name: dashboard-{{ $dashboard.name }}
+              mountPath: /etc/grafana/provisioning/dashboards/{{ $dashboard.filename }}
+              subPath: {{ $dashboard.filename }}
+            {{- end }}
             {{- end }}
             - name: datasource
               mountPath: /etc/grafana/provisioning/datasources
@@ -45,9 +48,11 @@ spec:
         - name: dashboard-provider
           configMap:
             name: {{ include "hammerspace-monitoring.fullname" . }}-dashboard-provider
-        - name: dashboards
+        {{- range $key, $dashboard := .Values.grafana.dashboards }}
+        - name: dashboard-{{ $dashboard.name }}
           configMap:
-            name: {{ include "hammerspace-monitoring.fullname" . }}-dashboards
+            name: {{ include "hammerspace-monitoring.fullname" . }}-dashboard-{{ $dashboard.name }}
+        {{- end }}
         {{- end }}
         - name: datasource
           configMap:
