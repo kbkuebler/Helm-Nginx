@@ -1,4 +1,4 @@
 apiVersion: v2
 description: Monitoring stack with Prometheus and Grafana for Hammerspace
 name: hammerspace-monitoring
-version: 0.1.9
+version: 0.1.10

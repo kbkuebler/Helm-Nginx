@@ -11,7 +11,9 @@ metadata:
     grafana_dashboard: "1"
 data:
   {{- range $key, $dashboard := .Values.grafana.dashboards }}
+  {{- if $.Files.Get $dashboard.path }}
   {{ $dashboard.filename }}: |
 {{ $.Files.Get $dashboard.path | indent 4 }}
+  {{- end }}
   {{- end }}
 {{- end }}
