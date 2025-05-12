@@ -33,7 +33,7 @@ spec:
             - name: dashboard-provider
               mountPath: /etc/grafana/provisioning/dashboards
             - name: dashboards
-              mountPath: /etc/grafana/provisioning/dashboards/dashboards
+              mountPath: /etc/grafana/provisioning/dashboards
             {{- end }}
             - name: datasource
               mountPath: /etc/grafana/provisioning/datasources
