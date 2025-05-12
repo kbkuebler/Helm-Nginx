@@ -1,65 +1,53 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "hammerspace-monitoring.fullname" . }}-prometheus-config
+  name: {{ include "hammerspace-monitoring.fullname" . }}-prometheus
   labels:
     app: {{ include "hammerspace-monitoring.name" . }}
     component: prometheus
 data:
-  prometheus.yaml: |
+  prometheus.yml: |
     global:
-      scrape_interval: 15s
-      evaluation_interval: 15s
+      scrape_interval: {{ .Values.prometheus.config.global.scrape_interval }}
+      evaluation_interval: {{ .Values.prometheus.config.global.evaluation_interval }}
       external_labels:
-        monitor: example
-      metric_name_validation_scheme: legacy
+        {{- toYaml .Values.prometheus.config.global.external_labels | nindent 8 }}
+      metric_name_validation_scheme: {{ .Values.prometheus.config.global.metric_name_validation_scheme }}
 
     scrape_configs:
-      - job_name: prometheus
-        fallback_scrape_protocol: PrometheusText1.0.0
-        static_configs:
-          - targets: ['localhost:9090']
-            labels:
-              node_type: prometheus
-
-      {{- if .Values.prometheus.scrapeTargets.cluster }}
-      - job_name: cluster
-        fallback_scrape_protocol: PrometheusText1.0.0
+      {{- range $clusterName, $cluster := .Values.prometheus.clusters }}
+      - job_name: 'hammerspace-anvil-{{ $clusterName }}'
         static_configs:
           - targets:
-              {{- range .Values.prometheus.scrapeTargets.cluster }}
-              - '{{ . }}'
-              {{- end }}
-            labels:
-              cluster: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
-              node_type: clusterip
-              instance: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
-      {{- end }}
+            {{- range $cluster.anvil.targets }}
+            - '{{ .ip }}:{{ .port }}'
+            {{- end }}
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: instance
+            replacement: {{ $cluster.anvil.instance }}
 
-      {{- if .Values.prometheus.scrapeTargets.anvil }}
-      - job_name: anvil_nodes
-        fallback_scrape_protocol: PrometheusText1.0.0
+      - job_name: 'hammerspace-dsx-{{ $clusterName }}'
         static_configs:
           - targets:
-              {{- range .Values.prometheus.scrapeTargets.anvil }}
-              - '{{ . }}'
-              {{- end }}
-            labels:
-              cluster: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
-              node_type: anvil
-              instance: {{ .Values.prometheus.anvilInstance | default "default-anvil-instance" }}
-      {{- end }}
+            {{- range $cluster.dsx.targets }}
+            - '{{ .ip }}:{{ .port }}'
+            {{- end }}
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: instance
+            replacement: {{ $cluster.dsx.instance }}
 
-      {{- if .Values.prometheus.scrapeTargets.dsx }}
-      - job_name: dsx_nodes
-        fallback_scrape_protocol: PrometheusText1.0.0
+      - job_name: 'hammerspace-cluster-{{ $clusterName }}'
         static_configs:
           - targets:
-              {{- range .Values.prometheus.scrapeTargets.dsx }}
-              - '{{ . }}'
-              {{- end }}
-            labels:
-              cluster: {{ .Values.prometheus.clusterLabel | default "default-cluster" }}
-              node_type: dsx
-              instance: {{ .Values.prometheus.dsxInstance | default "default-dsx-instance" }}
+            {{- range $cluster.cluster.targets }}
+            {{- range .ports }}
+            - '{{ $.ip }}:{{ . }}'
+            {{- end }}
+            {{- end }}
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: instance
+            replacement: '{{ $clusterName }}-cluster'
       {{- end }}

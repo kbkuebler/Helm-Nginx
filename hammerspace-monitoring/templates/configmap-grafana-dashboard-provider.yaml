@@ -1,5 +1,6 @@
 ---
 # templates/configmap-grafana-dashboard-provider.yaml
+{{- if .Values.dashboards.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,14 +9,15 @@ metadata:
     app: {{ include "hammerspace-monitoring.name" . }}
     component: grafana
 data:
-  dashboards.yaml: |
+  dashboard-provider.yaml: |
     apiVersion: 1
     providers:
-      - name: 'default'
-        orgId: 1
-        folder: ''
-        type: file
-        disableDeletion: false
-        editable: true
+      - name: {{ .Values.grafana.config.dashboardProvider.name }}
+        orgId: {{ .Values.grafana.config.dashboardProvider.orgId }}
+        folder: {{ .Values.grafana.config.dashboardProvider.folder }}
+        type: {{ .Values.grafana.config.dashboardProvider.type }}
+        disableDeletion: {{ .Values.grafana.config.dashboardProvider.disableDeletion }}
+        editable: {{ .Values.grafana.config.dashboardProvider.editable }}
         options:
-          path: /etc/grafana/provisioning/dashboards 
+          path: {{ .Values.grafana.config.dashboardProvider.options.path }}
+{{- end }} 

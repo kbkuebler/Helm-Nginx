@@ -3,6 +3,9 @@ nameOverride: ""
 fullnameOverride: ""
 
 prometheus:
+  image:
+    repository: prom/prometheus
+    tag: v2.45.0
   persistence:
     enabled: true
     storage:
@@ -10,25 +13,38 @@ prometheus:
         - ReadWriteOnce
       storageClassName: "hs-storage"
       size: 5Gi
+  config:
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        monitor: example
+      metric_name_validation_scheme: legacy
 
-  clusterLabel: "boston"
-  anvilInstance: "kbk-hs-boston-anvil.onaside.quest.local"
-  dsxInstance: "kbk-hs-boston-dsx1.onaside.quest.local"
-
-  scrapeTargets:
-    cluster:
-      - 10.200.120.200:9101
-      - 10.200.120.200:9102
-      - 10.200.120.200:9103
-
-    anvil:
-      - 10.200.120.200:9100
-
-    dsx:
-      - 10.200.120.201:9100
-      - 10.200.120.201:9105
+  clusters:
+    boston:
+      label: "boston"
+      anvil:
+        instance: "kbk-hs-boston-anvil.onaside.quest.local"
+        targets:
+          - ip: "10.200.120.200"
+            port: 9100
+      dsx:
+        instance: "kbk-hs-boston-dsx1.onaside.quest.local"
+        targets:
+          - ip: "10.200.120.201"
+            port: 9100
+          - ip: "10.200.120.201"
+            port: 9105
+      cluster:
+        targets:
+          - ip: "10.200.120.200"
+            ports: [9101, 9102, 9103]
 
 grafana:
+  image:
+    repository: grafana/grafana
+    tag: 10.2.0
   adminUser: admin
   adminPassword: admin
   persistence:
@@ -38,6 +54,16 @@ grafana:
         - ReadWriteOnce
       storageClassName: "hs-storage"
       size: 5Gi
+  config:
+    dashboardProvider:
+      name: 'default'
+      orgId: 1
+      folder: ''
+      type: file
+      disableDeletion: false
+      editable: true
+      options:
+        path: /etc/grafana/provisioning/dashboards
 
   dashboards:
     hammerspaceFilesystemStats:

@@ -3,7 +3,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hs-prometheus
+  name: prometheus
 spec:
   replicas: 1
   selector:
@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: prometheus
-          image: prom/prometheus:latest
+          image: "{{ .Values.prometheus.image.repository }}:{{ .Values.prometheus.image.tag }}"
           args:
             - --config.file=/etc/prometheus/prometheus.yaml
           ports:
@@ -36,4 +36,4 @@ spec:
             name: {{ include "hammerspace-monitoring.fullname" . }}-prometheus-config
         - name: storage
           persistentVolumeClaim:
-            claimName: {{ include "hammerspace-monitoring.fullname" . }}-prometheus
+            claimName: prometheus-pvc

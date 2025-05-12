@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: grafana
-          image: grafana/grafana:latest
+          image: "{{ .Values.grafana.image.repository }}:{{ .Values.grafana.image.tag }}"
           env:
             - name: GF_SECURITY_ADMIN_USER
               value: {{ .Values.grafana.adminUser }}
@@ -29,22 +29,26 @@ spec:
           volumeMounts:
             - name: grafana-storage
               mountPath: /var/lib/grafana
+            {{- if .Values.dashboards.enabled }}
             - name: dashboard-provider
               mountPath: /etc/grafana/provisioning/dashboards
             - name: dashboards
               mountPath: /etc/grafana/provisioning/dashboards/dashboards
+            {{- end }}
             - name: datasource
               mountPath: /etc/grafana/provisioning/datasources
       volumes:
         - name: grafana-storage
           persistentVolumeClaim:
             claimName: {{ include "hammerspace-monitoring.fullname" . }}-grafana
+        {{- if .Values.dashboards.enabled }}
         - name: dashboard-provider
           configMap:
             name: {{ include "hammerspace-monitoring.fullname" . }}-dashboard-provider
         - name: dashboards
           configMap:
             name: {{ include "hammerspace-monitoring.fullname" . }}-dashboards
+        {{- end }}
         - name: datasource
           configMap:
             name: {{ include "hammerspace-monitoring.fullname" . }}-datasource
