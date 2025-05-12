@@ -1,1 +1,2 @@
+---
 {{ include "hammerspace-monitoring.pvc" (list . "prometheus" .Values.prometheus) }}
