@@ -106,12 +106,10 @@ Usage:
 {{ include "hammerspace-monitoring.pvc" (list . "grafana" .Values.grafana) }}
 */}}
 {{- define "hammerspace-monitoring.pvc" -}}
-{{- $root := index . 0 }}
-{{- $component := index . 1 }}
-{{- $config := index . 2 }}
-{{- if $config -}}
-{{- if $config.persistence -}}
-{{- if $config.persistence.enabled }}
+{{- $root := index . 0 -}}
+{{- $component := index . 1 -}}
+{{- $config := index . 2 -}}
+{{- if and $config $config.persistence $config.persistence.enabled -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -125,7 +123,5 @@ spec:
     requests:
       storage: {{ $config.persistence.storage.size }}
   storageClassName: {{ $config.persistence.storage.storageClassName | quote }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- end -}}
 {{- end -}}

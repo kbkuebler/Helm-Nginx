@@ -43,7 +43,7 @@ spec:
       volumes:
         - name: grafana-storage
           persistentVolumeClaim:
-            claimName: {{ include "hammerspace-monitoring.fullname" . }}-grafana
+            claimName: {{ include "hammerspace-monitoring.componentName" (list . "grafana") }}
         {{- if .Values.dashboards.enabled }}
         - name: dashboard-provider
           configMap:
