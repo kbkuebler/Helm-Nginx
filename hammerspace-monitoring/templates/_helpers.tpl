@@ -25,6 +25,7 @@ If release name contains chart name it will be used as a full name.
 */}}
 {{- define "hammerspace-monitoring.fullname" -}}
 {{- $name := include "hammerspace-monitoring.name" . -}}
+{{- if .Release -}}
 {{- if .Values -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
@@ -42,6 +43,9 @@ If release name contains chart name it will be used as a full name.
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+{{- else -}}
+{{- $name -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
@@ -49,9 +53,13 @@ Create chart name and version as used by the chart label.
 */}}
 {{- define "hammerspace-monitoring.chart" -}}
 {{- if .Chart -}}
+{{- if .Chart.Version -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "hammerspace-monitoring-%s" .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- else -}}
+{{- "hammerspace-monitoring" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
 
@@ -59,12 +67,18 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "hammerspace-monitoring.labels" -}}
+{{- if .Chart -}}
 helm.sh/chart: {{ include "hammerspace-monitoring.chart" . }}
+{{- end }}
 {{ include "hammerspace-monitoring.selectorLabels" . }}
+{{- if .Chart -}}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
+{{- end }}
+{{- if .Release -}}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -72,7 +86,9 @@ Selector labels
 */}}
 {{- define "hammerspace-monitoring.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "hammerspace-monitoring.name" . }}
+{{- if .Release -}}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
 {{- end }}
 
 {{/*
@@ -93,6 +109,8 @@ Usage:
 {{- $root := index . 0 }}
 {{- $component := index . 1 }}
 {{- $config := index . 2 }}
+{{- if $config -}}
+{{- if $config.persistence -}}
 {{- if $config.persistence.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -107,5 +125,7 @@ spec:
     requests:
       storage: {{ $config.persistence.storage.size }}
   storageClassName: {{ $config.persistence.storage.storageClassName | quote }}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- end -}}
