@@ -1,2 +1,4 @@
+{{- if .Values.grafana.persistence.enabled -}}
 ---
 {{ include "hammerspace-monitoring.pvc" (list . "grafana" .Values.grafana) }}
+{{- end -}}
