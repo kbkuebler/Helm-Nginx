@@ -1,4 +1,16 @@
 ---
-{{- if .Values.prometheus.persistence.enabled -}}
-{{ include "hammerspace-monitoring.pvc" (list . "prometheus" .Values.prometheus) }}
-{{- end -}}
+{{- if .Values.prometheus.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "hammerspace-monitoring.componentName" (list . "prometheus") }}
+  labels:
+    {{- include "hammerspace-monitoring.labels" . | nindent 4 }}
+    app.kubernetes.io/component: prometheus
+spec:
+  accessModes: {{ toYaml .Values.prometheus.persistence.storage.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.prometheus.persistence.storage.size }}
+  storageClassName: {{ .Values.prometheus.persistence.storage.storageClassName | quote }}
+{{- end }}
