@@ -4,9 +4,17 @@ Expand the name of the chart.
 */}}
 {{- define "hammerspace-monitoring.name" -}}
 {{- if .Chart -}}
+{{- if .Values -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
+{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- else -}}
+{{- if .Values -}}
 {{- default "hammerspace-monitoring" .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- "hammerspace-monitoring" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 
@@ -17,8 +25,16 @@ If release name contains chart name it will be used as a full name.
 */}}
 {{- define "hammerspace-monitoring.fullname" -}}
 {{- $name := include "hammerspace-monitoring.name" . -}}
+{{- if .Values -}}
 {{- if .Values.fullnameOverride -}}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
 {{- else -}}
 {{- if contains $name .Release.Name -}}
 {{- .Release.Name | trunc 63 | trimSuffix "-" -}}
